@@ -44,8 +44,8 @@ LOGGING = {
 # Application definition
 
 INSTALLED_APPS = (
-    'debug_toolbar',
     'django.contrib.admin',
+    'debug_toolbar',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
