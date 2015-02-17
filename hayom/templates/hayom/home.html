@@ -11,6 +11,41 @@
     th {
       text-align: right;
     }
+    .answer-invalid {
+      color: #888;
+    }
+    .answer {
+      width: 144px;
+    }
+    .answer input {
+      position: relative;
+    }
+    .answer input:before {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 1px solid #808080;
+      content: "";
+      background: #FFF;
+    }
+    .answer input:checked:after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #faa;
+      content: '✗';
+    }
+    .answer input:not(:checked):after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #afa;
+      content: '✓';
+    }
   </style>
 </head>
 <body>
@@ -29,51 +64,74 @@
       </div>
     </div>
     <div class="row">
-      <table class="table">
-        <thead>
-          <tr>
-            <th colspan=2></th>
-            {% for party in parties %}
-              <th>{{ party.name }}</th>
-            {% endfor %}
-          </tr>
-          <tr>
-            <th colspan=2 style="text-align: left;">{% trans "סיכוי להיות מומלץ" %}</th>
-            {% for party in parties %}
-              <td>{{ party.percent }}%</td>
-            {% endfor %}
-          </tr>
-          <tr>
-            <th>{% trans "שאלה" %}</th>
-            <th>{% trans "תשובה" %}</th>
-            <th colspan={{num_parties}}>
-              {% trans "התפלגות תשובות בקרב ריצות זוכות" %}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for question in questions %}
+      <form>
+        <table class="table table-bordered">
+          <thead>
             <tr>
-              <td rowspan={{question.num_answers}}>
-                {{ question.title }}
-              </td>
-            {% for answer in question.answers %}
-              {% if not forloop.first %}
-                <tr>
-              {% endif %}
-                <td>
-                  {{ answer.name }}
+              <th colspan=2></th>
+              {% for party in parties %}
+                <th>{{ party.name }}</th>
+              {% endfor %}
+            </tr>
+            <tr>
+              <th colspan=2 style="text-align: left;">
+                {% trans "סיכוי להיות מומלץ על ידי השאלון בהינתן התשובות הנבחרות" %}:
+              </th>
+              {% for party in parties %}
+                <td>{{ party.percent }}%</td>
+              {% endfor %}
+            </tr>
+            <tr>
+              <th>{% trans "שאלה" %}</th>
+              <th>{% trans "תשובה" %}</th>
+              <th colspan={{num_parties}}>
+                {% trans "התפלגות התשובות לשאלות בקרב הריצות הזוכות של כל מפלגה" %}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for question in questions %}
+              <tr style="border-top: 3px solid black; border-bottom: 2px solid black;">
+                <td rowspan={{question.num_rows}}>
+                  {{ question.title }}
                 </td>
-                {% for pct in answer.party_percents %}
-                  <td>
-                    {{pct}}%
-                  </td>
+                <th style="text-align: left;">{% trans "מקדם" %}:</th>
+                {% for v in question.vector %}
+                  <td dir="ltr" style="text-align: center;">{{v}}</td>
                 {% endfor %}
               </tr>
+              {% for answer in question.answers %}
+                <tr>
+                  {% if answer.used %}
+                    <td class="answer">
+                      <input type="checkbox" name="{{question.code}}N{{answer.val}}" />
+                      {{ answer.name }}
+                      <span dir="ltr">({{ answer.val }})</span>
+                    </td>
+                    {% for pct in answer.party_percents %}
+                      <td>
+                        {{pct}}%
+                      </td>
+                    {% endfor %}
+                  {% else %}
+                    <td class="answer answer-invalid">
+                      <input type="checkbox" name="{{question.code}}N{{answer.val}}" checked="on" />
+                      {{ answer.name }}
+                      <span dir="ltr">({{ answer.val }})</span>
+                    </td>
+                    {% for pct in answer.party_percents %}
+                      <td class="answer-invalid">
+                        -
+                      </td>
+                    {% endfor %}
+                  {% endif %}
+                </tr>
+              {% endfor %}
             {% endfor %}
-          {% endfor %}
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+        <input type="submit" value="חשב עם התשובות הנבחרות" />
+      </form>
     </div>
   </div>
 </body>

@@ -1,10 +1,19 @@
 from hayom import parse_source, simulate
 
+import copy
 from django.shortcuts import render
 
 def home(request):
     questions_order, question_titles, answer_sets = parse_source.questions()
     party_names, weights = parse_source.parties(questions_order)
+
+    orig_answer_sets = copy.deepcopy(answer_sets)
+    for param in request.GET.keys():
+        parts = param.split('N')
+        if len(parts) != 2:
+            continue
+        del answer_sets[parts[0]][int(parts[1])]
+
     num_runs = 1000
     num_wins, winning_answers_count = simulate.random_sample(
         weights, questions_order, answer_sets, num_runs)
@@ -25,14 +34,18 @@ def home(request):
         if q == 'const':
             continue
         question = {
+            'code': q,
             'title': question_titles[q],
-            'num_answers': len(answer_sets[q]),
+            'num_rows': 1+len(orig_answer_sets[q]),
+            'vector': ['%.3f'%x for x in weights[:, q_idx]],
             'answers': []
             }
-        for k, v in sorted(answer_sets[q].items()):
+        for k, v in sorted(orig_answer_sets[q].items()):
+            valid_answers = answer_sets[q]
             answer = {
                 'val': k,
                 'name': v,
+                'used': k in valid_answers,
                 'party_percents': [
                     '%.1f' %
                     (100*winning_answers_count.get((p, q_idx, k), 0)/div[p])
