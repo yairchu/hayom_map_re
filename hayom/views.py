@@ -1,6 +1,7 @@
-from hayom import parse_source, simulate
+from hayom import models, parse_source, simulate
 
 import copy
+import pickle
 from django.shortcuts import render
 
 def home(request):
@@ -8,15 +9,31 @@ def home(request):
     party_names, weights = parse_source.parties(questions_order)
 
     orig_answer_sets = copy.deepcopy(answer_sets)
+    params = []
     for param in request.GET.keys():
         parts = param.split('N')
         if len(parts) != 2:
             continue
+        params.append(param)
         del answer_sets[parts[0]][int(parts[1])]
 
-    num_runs = 1000
-    num_wins, winning_answers_count = simulate.random_sample(
-        weights, questions_order, answer_sets, num_runs)
+    num_runs = 10000
+
+    params.sort()
+    params = '&'.join(params)
+    try:
+        cached_run = models.SimulationResult.objects.get(params = params)
+    except models.SimulationResult.DoesNotExist:
+        num_wins, winning_answers_count = simulate.random_sample(
+            weights, questions_order, answer_sets, num_runs)
+        cached_run = models.SimulationResult(params = params,
+            results = pickle.dumps((num_wins, winning_answers_count)))
+        try:
+            cached_run.save()
+        except:
+            pass
+    else:
+        num_wins, winning_answers_count = pickle.loads(cached_run.results)
 
     context = {
         'num_parties': len(party_names),
