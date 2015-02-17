@@ -1,0 +1,80 @@
+{% load i18n %}
+
+<!doctype html>
+<html dir="{{LANGUAGE_BIDI|yesno:"rtl,ltr"}}">
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css" />
+  <title> {% trans "ניתוח של ״המפה ואתה״ מבית ״ישראל היום״" %} </title>
+  <style type="text/css">
+    th {
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        {% trans "ניתוח של ״המפה ואתה״" %}
+      </div>
+      <div class="panel-body">
+        {% trans "אתר זה נועד לסייע בניתוח המבנה והתכנון של השאלון הפוליטי" %}
+        <a target="_blank" href="https://www.israelhayom.co.il/sites/default/files/ilhfiles/elections/map/index.html">
+          {% trans "״המפה ואתה״" %}
+        </a>
+        {% trans "מבית" %}
+        <a target="_blank" href="https://www.israelhayom.co.il/">{% trans "״ישראל היום״" %}</a>.
+      </div>
+    </div>
+    <div class="row">
+      <table class="table">
+        <thead>
+          <tr>
+            <th colspan=2></th>
+            {% for party in parties %}
+              <th>{{ party.name }}</th>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th colspan=2 style="text-align: left;">{% trans "סיכוי להיות מומלץ" %}</th>
+            {% for party in parties %}
+              <td>{{ party.percent }}%</td>
+            {% endfor %}
+          </tr>
+          <tr>
+            <th>{% trans "שאלה" %}</th>
+            <th>{% trans "תשובה" %}</th>
+            <th colspan={{num_parties}}>
+              {% trans "התפלגות תשובות בקרב ריצות זוכות" %}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for question in questions %}
+            <tr>
+              <td rowspan={{question.num_answers}}>
+                {{ question.title }}
+              </td>
+            {% for answer in question.answers %}
+              {% if not forloop.first %}
+                <tr>
+              {% endif %}
+                <td>
+                  {{ answer.name }}
+                </td>
+                {% for pct in answer.party_percents %}
+                  <td>
+                    {{pct}}%
+                  </td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

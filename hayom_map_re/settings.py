@@ -51,6 +51,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'hayom',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -81,7 +82,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'he'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
