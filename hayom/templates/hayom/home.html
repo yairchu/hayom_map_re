@@ -86,7 +86,11 @@
         <table class="table table-bordered">
           <thead>
             <tr>
-              <th colspan=2></th>
+              <th colspan=2 style="text-align: left;">
+                {% trans "סדר המפלגות" %}:
+                <br />
+                ({% trans "במקרה של תיקו בניקוד המפלגה הראשונה לפי הסדר מנצחת והשניה נעלמת" %})
+              </th>
               {% for party in parties %}
                 <th>{{ party.name }}</th>
               {% endfor %}
@@ -94,7 +98,7 @@
             <tr>
               <th colspan=2 style="text-align: left;">
                 {% trans "סיכוי להיות מומלץ על ידי השאלון בהינתן התשובות הנבחרות" %}:
-                <br>
+                <br />
                 ({% trans "מתוך דגימה של" %} {{num_runs}} {% trans "ריצות אקראיות" %})
               </th>
               {% for party in parties %}
