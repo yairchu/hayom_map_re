@@ -5,11 +5,15 @@ import pickle
 from django.shortcuts import render
 
 def home(request):
-    questions_order, question_titles, answer_sets = parse_source.questions()
-    party_names, weights = parse_source.parties(questions_order)
+    params = []
+    version = request.GET.get('version', 'latest')
+    if version != 'latest':
+        params.append('version=' + version)
+
+    questions_order, question_titles, answer_sets = parse_source.questions(version)
+    party_names, weights = parse_source.parties(questions_order, version)
 
     orig_answer_sets = copy.deepcopy(answer_sets)
-    params = []
     for param in request.GET.keys():
         parts = param.split('N')
         if len(parts) != 2:
@@ -50,6 +54,8 @@ def home(request):
         'parties': [],
         'questions': [],
         'num_runs': num_runs,
+        'version': version,
+        'versions': ['2015.2.15'],
         }
     for p, name in enumerate(party_names):
         context['parties'].append({
@@ -59,7 +65,7 @@ def home(request):
     div = num_wins.copy()
     div[div == 0] = 1
     for q_idx, q in enumerate(questions_order):
-        if q == 'const':
+        if q == 'const' and (weights[:, q_idx] == 0).all():
             continue
         question = {
             'code': q,

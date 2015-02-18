@@ -15,6 +15,9 @@
     .sim-results {
       background-color: #eef;
     }
+    .answer-invalid.sim-results {
+      background-color: white;
+    }
     th.sim-results {
       background-color: #ccf;
     }
@@ -30,16 +33,16 @@
     th.src-text {
       background-color: #ffc;
     }
-    .refresh {
+    .general {
       background-color: #f8f8f8;
     }
     .answer {
       width: 144px;
     }
-    .answer input {
+    .answer input[type="checkbox"] {
       position: relative;
     }
-    .answer input:before {
+    .answer input[type="checkbox"]:before {
       display: block;
       width: 100%;
       height: 100%;
@@ -47,7 +50,7 @@
       content: "";
       background: #FFF;
     }
-    .answer input:checked:after {
+    .answer input[type="checkbox"]:checked:after {
       position: absolute;
       top: 0;
       left: 0;
@@ -56,7 +59,7 @@
       background-color: #faa;
       content: '✗';
     }
-    .answer input:not(:checked):after {
+    .answer input[type="checkbox"]:not(:checked):after {
       position: absolute;
       top: 0;
       left: 0;
@@ -103,6 +106,11 @@
               {% trans "ירושלים בירתה הנצחית של העם היהודי ואין להעביר לפסלטינים את מזרח ירושלים" %}
             </a> - {% trans "מקבל את כולם חוץ מ״ישראל ביתנו״" %}.
           </li>
+          <li>
+            <a href="?version=2015.2.15">
+              {% trans "גרסה קודמת של השאלון מ 2015.2.15" %}
+            </a> - {% trans "לא ניתן לקבל את ״הרשימה המשותפת״" %}.
+          </li>
         </ul>
       </p>
       <form>
@@ -147,50 +155,78 @@
           <tbody>
             {% for question in questions %}
               <tr style="border-top: 3px solid black; border-bottom: 2px solid black;">
-                <td rowspan={{question.num_rows}} class="src-text">
-                  {{ question.title }}
-                </td>
-                <th style="text-align: left;" class="matrix">
-                  {% trans "מקדם" %}:
-                </th>
+                {% if question.code == 'const' %}
+                  <td class="general">
+                    {% trans "בונוס/עונש קבוע בניקוד" %}
+                  </td>
+                  <th style="text-align: left;" class="matrix">
+                    {% trans "ערך" %}:
+                  </th>
+                {% else %}
+                  <td rowspan={{question.num_rows}} class="src-text">
+                    {{ question.title }}
+                  </td>
+                  <th style="text-align: left;" class="matrix">
+                    {% trans "מקדם" %}:
+                  </th>
+                {% endif %}
                 {% for v in question.vector %}
                   <td dir="ltr" style="text-align: center;" class="matrix">
                     {{v}}
                   </td>
                 {% endfor %}
               </tr>
-              {% for answer in question.answers %}
-                <tr>
-                  {% if answer.used %}
-                    <td class="answer src-text">
-                      <input type="checkbox" name="{{question.code}}N{{answer.val}}" />
-                      {{ answer.name }}
-                      <span dir="ltr">({{ answer.val }})</span>
-                    </td>
-                    {% for pct in answer.party_percents %}
-                      <td class="sim-results">
-                        {{pct}}%
+              {% if question.code != 'const' %}
+                {% for answer in question.answers %}
+                  <tr>
+                    {% if answer.used %}
+                      <td class="answer src-text">
+                        <input type="checkbox" name="{{question.code}}N{{answer.val}}" />
+                        {{ answer.name }}
+                        <span dir="ltr">({{ answer.val }})</span>
                       </td>
-                    {% endfor %}
-                  {% else %}
-                    <td class="answer answer-invalid">
-                      <input type="checkbox" name="{{question.code}}N{{answer.val}}" checked="on" />
-                      {{ answer.name }}
-                      <span dir="ltr">({{ answer.val }})</span>
-                    </td>
-                    {% for party in parties %}
-                      <td class="answer-invalid">
-                        -
+                      {% for pct in answer.party_percents %}
+                        <td class="sim-results">
+                          {{pct}}%
+                        </td>
+                      {% endfor %}
+                    {% else %}
+                      <td class="answer answer-invalid src-text">
+                        <input type="checkbox" name="{{question.code}}N{{answer.val}}" checked="on" />
+                        {{ answer.name }}
+                        <span dir="ltr">({{ answer.val }})</span>
                       </td>
-                    {% endfor %}
-                  {% endif %}
-                </tr>
-              {% endfor %}
+                      {% for party in parties %}
+                        <td class="answer-invalid sim-results">
+                          -
+                        </td>
+                      {% endfor %}
+                    {% endif %}
+                  </tr>
+                {% endfor %}
+              {% endif %}
             {% endfor %}
           </tbody>
           <tfoot>
             <tr>
-              <td colspan={{num_cols}} style="text-align: center; border: 2px solid black;" class="refresh">
+              <td colspan={{num_cols}} style="border-top: 2px solid black;" class="general">
+                {% trans "גרסת השאלון" %}:
+                <input type="radio" name="version" value="latest"
+                  {% if version == 'latest' %} checked="true" {% endif %}
+                />
+                {% trans "גרסה עדכנית נכון ל" %}
+                2015.2.17
+                {% for v in versions %}
+                  <input type="radio" name="version" value="{{v}}"
+                    {% if version == v %} checked="true" {% endif %}
+                  />
+                  {% trans "גרסה מ" %}
+                  {{v}}
+                {% endfor %}
+              </td>
+            </tr>
+            <tr>
+              <td colspan={{num_cols}} style="text-align: center; border: 2px solid black;" class="general">
                 <input type="submit" value="חשב עם התשובות הנבחרות" class="btn btn-lg btn-success" />
               </td>
             </tr>
