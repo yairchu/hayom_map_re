@@ -39,6 +39,7 @@ def home(request):
         'num_parties': len(party_names),
         'parties': [],
         'questions': [],
+        'num_runs': num_runs,
         }
     for p, name in enumerate(party_names):
         context['parties'].append({

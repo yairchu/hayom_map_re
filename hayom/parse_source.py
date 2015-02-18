@@ -94,10 +94,21 @@ def parties(questions_order, version='latest'):
         assert question in questions
         formula_of_party[party][question] = float(parts[4])
 
-    weights = numpy.zeros([len(parties), len(questions)])
-    for p, party in enumerate(parties):
+    # Parties come in a specific order which matters when there is a tie.
+    parties_order = []
+    for line in js_src:
+        prefix = "            partiesObj[parseFloat(this)] = '"
+        if not line.startswith(prefix):
+            continue
+        party_name = line[len(prefix):].split("'", 1)[0]
+        parties_order.append(party_name)
+    assert set(parties_order) == set(parties)
+    del parties
+
+    weights = numpy.zeros([len(parties_order), len(questions)])
+    for p, party in enumerate(parties_order):
         for q, question in enumerate(questions_order):
             weights[p, q] = formula_of_party[party][question]
 
-    party_names = [name_of_party[p] for p in parties]
+    party_names = [name_of_party[p] for p in parties_order]
     return party_names, weights
