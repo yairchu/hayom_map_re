@@ -26,6 +26,24 @@
     .answer-invalid {
       color: #888;
     }
+    .sim-results {
+      background-color: #eef;
+    }
+    th.sim-results {
+      background-color: #ccf;
+    }
+    .matrix {
+      background-color: #fee;
+    }
+    th.matrix {
+      background-color: #fcc;
+    }
+    .src-text {
+      background-color: #ffe;
+    }
+    th.src-text {
+      background-color: #ffc;
+    }
     .answer {
       width: 144px;
     }
@@ -86,29 +104,37 @@
         <table class="table table-bordered">
           <thead>
             <tr>
-              <th colspan=2 style="text-align: left;">
+              <th colspan=2 style="text-align: left;" class="src-text">
                 {% trans "סדר המפלגות" %}:
                 <br />
                 ({% trans "במקרה של תיקו בניקוד המפלגה הראשונה לפי הסדר מנצחת והשניה נעלמת" %})
               </th>
               {% for party in parties %}
-                <th>{{ party.name }}</th>
+                <td class="src-text">
+                  {{ party.name }}
+                </td>
               {% endfor %}
             </tr>
             <tr>
-              <th colspan=2 style="text-align: left;">
+              <th colspan=2 style="text-align: left;" class="sim-results">
                 {% trans "סיכוי להיות מומלץ על ידי השאלון בהינתן התשובות הנבחרות" %}:
                 <br />
                 ({% trans "מתוך דגימה של" %} {{num_runs}} {% trans "ריצות אקראיות" %})
               </th>
               {% for party in parties %}
-                <td>{{ party.percent }}%</td>
+                <td class="sim-results">
+                  {{ party.percent }}%
+                </td>
               {% endfor %}
             </tr>
             <tr>
-              <th>{% trans "שאלה" %}</th>
-              <th>{% trans "תשובה" %}</th>
-              <th colspan={{num_parties}}>
+              <th class="src-text">
+                {% trans "שאלה" %}
+              </th>
+              <th class="src-text">
+                {% trans "תשובה" %}
+              </th>
+              <th colspan={{num_parties}} class="sim-results">
                 {% trans "סיכוי להיות מומלץ בהינתן תשובה מסוימת" %}
               </th>
             </tr>
@@ -116,24 +142,28 @@
           <tbody>
             {% for question in questions %}
               <tr style="border-top: 3px solid black; border-bottom: 2px solid black;">
-                <td rowspan={{question.num_rows}}>
+                <td rowspan={{question.num_rows}} class="src-text">
                   {{ question.title }}
                 </td>
-                <th style="text-align: left;">{% trans "מקדם" %}:</th>
+                <th style="text-align: left;" class="matrix">
+                  {% trans "מקדם" %}:
+                </th>
                 {% for v in question.vector %}
-                  <td dir="ltr" style="text-align: center;">{{v}}</td>
+                  <td dir="ltr" style="text-align: center;" class="matrix">
+                    {{v}}
+                  </td>
                 {% endfor %}
               </tr>
               {% for answer in question.answers %}
                 <tr>
                   {% if answer.used %}
-                    <td class="answer">
+                    <td class="answer src-text">
                       <input type="checkbox" name="{{question.code}}N{{answer.val}}" />
                       {{ answer.name }}
                       <span dir="ltr">({{ answer.val }})</span>
                     </td>
                     {% for pct in answer.party_percents %}
-                      <td>
+                      <td class="sim-results">
                         {{pct}}%
                       </td>
                     {% endfor %}
