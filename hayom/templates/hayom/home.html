@@ -1,23 +1,9 @@
+{% extends "hayom/base.html" %}
+
 {% load i18n %}
 
-<!doctype html>
-<html dir="{{LANGUAGE_BIDI|yesno:"rtl,ltr"}}">
-<head>
-  <meta charset="utf-8" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css" />
+{% block head-extra %}
   <title> {% trans "ניתוח של ״המפה ואתה״ מבית ״ישראל היום״" %} </title>
-
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-59850689-1', 'auto');
-    ga('send', 'pageview');
-
-  </script>
 
   <style type="text/css">
     th {
@@ -43,6 +29,9 @@
     }
     th.src-text {
       background-color: #ffc;
+    }
+    .refresh {
+      background-color: #f8f8f8;
     }
     .answer {
       width: 144px;
@@ -77,29 +66,45 @@
       content: '✓';
     }
   </style>
-</head>
-<body>
+{% endblock %}
+{% block content %}
   <div class="container">
-    <div class="panel panel-info">
-      <div class="panel-heading">
-        {% trans "ניתוח של ״המפה ואתה״" %}
-      </div>
-      <div class="panel-body">
-        <p>
-          {% trans "אתר זה נועד לסייע בניתוח המבנה והתכנון של השאלון הפוליטי" %}
-          <a target="_blank" href="https://www.israelhayom.co.il/sites/default/files/ilhfiles/elections/map/index.html">
-            {% trans "״המפה ואתה״" %}
-          </a>
-          {% trans "מבית" %}
-          <a target="_blank" href="https://www.israelhayom.co.il/">{% trans "״ישראל היום״" %}</a>.
-        </p>
-        <p>
-          {% trans "קוד המקור הפתוח של אתר זה נגיש לציבור הרחב" %}
-          <a target="_blank" href="https://github.com/yairchu/hayom_map_re">{% trans "בגיטהאב" %}</a>.
-        </p>
-      </div>
-    </div>
     <div class="row">
+      <p>
+        {% blocktrans %}
+        בטבלה שלפניכם מוצגים הסיכויים של המפלגות השונות
+        להיות המפלגות שמתאימות למשתמש לפי האתר ״המפה ואתה״
+        כאשר המשתמשים בוחרים תשובות באופן אקראי.
+        {% endblocktrans %}
+      </p>
+      <p>
+        {% blocktrans %}
+        ניתן לבחור תשובות מסוימות לשאלות,
+        והסימולציה של בחירת התשובות האקראיות תהיה מתוך התשובות הנבחרות.
+        כדי לבחור תשובות יש לסמן בריבועים לצדן של התשובות.
+        לאחר הסימון יש ללחוץ על כפתור העדכון בתחתית הטבלה.
+        {% endblocktrans %}
+      </p>
+      <p>
+        {% trans "חיתוכים לדוגמא" %}:
+        <ul>
+          <li>
+            <a href="?">
+              {% trans "בחירה מכל האפשרויות באופן אקראי" %}
+            </a>
+          </li>
+          <li>
+            <a href="?m2_3N-2=on&m2_3N-1=on&m2_3N1=on&m2_3N2=on&m3_3N-2=on&m3_3N-1=on&m3_3N1=on&m3_3N2=on&m4_3N-2=on&m4_3N-1=on&m5_3N-2=on&m5_3N-1=on&m5_3N1=on&m5_3N2=on&m6_3N-2=on&m6_3N-1=on&m6_3N1=on&m6_3N2=on&m2_1N-2=on&m2_1N-1=on&m2_1N1=on&m2_1N2=on&m3_1N-2=on&m3_1N-1=on&m3_1N1=on&m3_1N2=on&m4_1N-2=on&m4_1N-1=on&m4_1N1=on&m4_1N2=on&m5_1N-2=on&m5_1N-1=on&m5_1N1=on&m5_1N2=on&m6_1N-2=on&m6_1N-1=on&m6_1N1=on&m6_1N2=on&m2_2N-2=on&m2_2N-1=on&m2_2N1=on&m2_2N2=on&m3_2N-2=on&m3_2N-1=on&m3_2N1=on&m3_2N2=on&m4_2N-2=on&m4_2N-1=on&m4_2N1=on&m4_2N2=on&m5_2N-2=on&m5_2N-1=on&m5_2N1=on&m5_2N2=on&m6_2N-2=on&m6_2N-1=on&m6_2N1=on&m6_2N2=on&V16N-1=on&V16N1=on">
+              {% trans "משתמש נייטרלי" %}
+            </a> - {% trans "מקבל את הליכוד או את המחנה הציוני" %}.
+          </li>
+          <li>
+            <a href="?m2_1N-2=on&m2_1N-1=on&m2_1N0=on&m5_1N0=on&m5_1N1=on&m5_1N2=on">
+              {% trans "ירושלים בירתה הנצחית של העם היהודי ואין להעביר לפסלטינים את מזרח ירושלים" %}
+            </a> - {% trans "מקבל את כולם חוץ מ״ישראל ביתנו״" %}.
+          </li>
+        </ul>
+      </p>
       <form>
         <table class="table table-bordered">
           <thead>
@@ -183,10 +188,15 @@
               {% endfor %}
             {% endfor %}
           </tbody>
+          <tfoot>
+            <tr>
+              <td colspan={{num_cols}} style="text-align: center; border: 2px solid black;" class="refresh">
+                <input type="submit" value="חשב עם התשובות הנבחרות" class="btn btn-lg btn-success" />
+              </td>
+            </tr>
+          </tfoot>
         </table>
-        <input type="submit" value="חשב עם התשובות הנבחרות" />
       </form>
     </div>
   </div>
-</body>
-</html>
+{% endblock %}

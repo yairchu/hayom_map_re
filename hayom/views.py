@@ -15,7 +15,16 @@ def home(request):
         if len(parts) != 2:
             continue
         params.append(param)
-        del answer_sets[parts[0]][int(parts[1])]
+        q_code = parts[0]
+        answer_set = answer_sets[q_code]
+        del answer_set[int(parts[1])]
+        if not answer_set:
+            # No answer allowed for a question
+            context = {
+                'question': question_titles[q_code],
+                }
+            return render(
+                request, 'hayom/error_all_answers_forbidden.html', context)
 
     num_runs = 10000
 
@@ -37,6 +46,7 @@ def home(request):
 
     context = {
         'num_parties': len(party_names),
+        'num_cols': 2 + len(party_names),
         'parties': [],
         'questions': [],
         'num_runs': num_runs,
