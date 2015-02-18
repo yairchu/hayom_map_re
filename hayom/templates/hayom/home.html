@@ -109,7 +109,7 @@
               <th>{% trans "שאלה" %}</th>
               <th>{% trans "תשובה" %}</th>
               <th colspan={{num_parties}}>
-                {% trans "התפלגות התשובות לשאלות בקרב הריצות הזוכות של כל מפלגה" %}
+                {% trans "סיכוי להיות מומלץ בהינתן תשובה מסוימת" %}
               </th>
             </tr>
           </thead>
@@ -143,7 +143,7 @@
                       {{ answer.name }}
                       <span dir="ltr">({{ answer.val }})</span>
                     </td>
-                    {% for pct in answer.party_percents %}
+                    {% for party in parties %}
                       <td class="answer-invalid">
                         -
                       </td>

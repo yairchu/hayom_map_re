@@ -24,16 +24,16 @@ def home(request):
     try:
         cached_run = models.SimulationResult.objects.get(params = params)
     except models.SimulationResult.DoesNotExist:
-        num_wins, winning_answers_count = simulate.random_sample(
+        num_wins, num_wins_given_answer = simulate.random_sample(
             weights, questions_order, answer_sets, num_runs)
         cached_run = models.SimulationResult(params = params,
-            results = pickle.dumps((num_wins, winning_answers_count)))
+            results = pickle.dumps((num_wins, num_wins_given_answer)))
         try:
             cached_run.save()
         except:
             pass
     else:
-        num_wins, winning_answers_count = pickle.loads(cached_run.results)
+        num_wins, num_wins_given_answer = pickle.loads(cached_run.results)
 
     context = {
         'num_parties': len(party_names),
@@ -64,11 +64,12 @@ def home(request):
                 'val': k,
                 'name': v,
                 'used': k in valid_answers,
-                'party_percents': [
-                    '%.1f' %
-                    (100*winning_answers_count.get((p, q_idx, k), 0)/div[p])
-                    for p in range(len(weights))]
                 }
+            answer_wins = num_wins_given_answer.get((q_idx, k))
+            if answer_wins is not None:
+                answer_wins /= sum(answer_wins)
+                answer['party_percents'] = [
+                    '%.1f' % (100*x) for x in answer_wins / sum(answer_wins)]
             question['answers'].append(answer)
         context['questions'].append(question)
     return render(request, 'hayom/home.html', context)

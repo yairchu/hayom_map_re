@@ -17,11 +17,13 @@ def random_sample(weights, questions, answer_sets, num_runs = 1000):
     answer_sets = [list(answer_sets[question].keys()) for question in questions]
     num_parties = len(weights)
     num_wins = numpy.zeros(num_parties)
-    winning_answers_count = {}
+    num_wins_given_answer = {}
     for i in range(num_runs):
         winner_id, answers = random_result(weights, questions, answer_sets)
         num_wins[winner_id] += 1
         for q, a in enumerate(answers):
-            key = winner_id, q, a
-            winning_answers_count[key] = 1 + winning_answers_count.get(key, 0)
-    return num_wins, winning_answers_count
+            key = q, a
+            if key not in num_wins_given_answer:
+                num_wins_given_answer[key] = numpy.zeros(num_parties)
+            num_wins_given_answer[key][winner_id] += 1
+    return num_wins, num_wins_given_answer
