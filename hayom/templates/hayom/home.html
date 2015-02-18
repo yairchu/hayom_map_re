@@ -9,7 +9,7 @@
     th {
       text-align: right;
     }
-    .answer-invalid {
+    .answer-invalid, .zero {
       color: #888;
     }
     .sim-results {
@@ -172,7 +172,11 @@
                 {% endif %}
                 {% for v in question.vector %}
                   <td dir="ltr" style="text-align: center;" class="matrix">
-                    {{v}}
+                    {% if v == '0.000' %}
+                      <span class="zero"> 0 </span>
+                    {% else %}
+                      {{v}}
+                    {% endif %}
                   </td>
                 {% endfor %}
               </tr>
