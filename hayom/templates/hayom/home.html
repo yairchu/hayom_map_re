@@ -183,7 +183,7 @@
                     {% trans "בונוס/עונש קבוע בניקוד" %}
                   </td>
                   <th style="text-align: left;" class="matrix">
-                    {% trans "ערך" %}:
+                    {% trans "ערך התחלתי" %}:
                   </th>
                 {% else %}
                   <td rowspan={{question.num_rows}} class="src-text">
@@ -197,11 +197,13 @@
                 {% endif %}
                 {% for v in question.vector %}
                   <td dir="ltr" style="text-align: center;" class="matrix">
-                    {% if v == '0.000' %}
-                      <span class="zero"> 0 </span>
-                    {% else %}
-                      {{v}}
-                    {% endif %}
+                    <span data-toggle="tooltip" title="{{v.party}}">
+                      {% if v.val == '0.000' %}
+                        <span class="zero"> 0 </span>
+                      {% else %}
+                        {{v.val}}
+                      {% endif %}
+                    </span>
                   </td>
                 {% endfor %}
               </tr>
@@ -264,4 +266,12 @@
       </form>
     </div>
   </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+  <script>
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
 {% endblock %}

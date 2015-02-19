@@ -71,9 +71,14 @@ def home(request):
             'code': q,
             'title': question_titles[q],
             'num_rows': 1+len(orig_answer_sets[q]),
-            'vector': ['%.3f'%x for x in weights[:, q_idx]],
+            'vector': [],
             'answers': []
             }
+        for x, party in zip(weights[:, q_idx], party_names):
+            question['vector'].append({
+                'val': '%.3f'%x,
+                'party': party
+            })
         for k, v in sorted(orig_answer_sets[q].items()):
             valid_answers = answer_sets[q]
             answer = {
