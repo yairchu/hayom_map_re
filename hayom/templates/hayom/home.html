@@ -192,8 +192,7 @@
                 {% else %}
                   <td rowspan={{question.num_rows}} class="src-text">
                     {{ question.title }}
-                    <br />
-                    <i>{{ question.code }}</i>
+                    <span style="float: left;"><i>{{question.code}}</i></span>
                   </td>
                   <th style="text-align: left;" class="matrix">
                     {% trans "מקדם" %}:
@@ -307,7 +306,10 @@
           </tr>
         {% endfor %}
         <tr>
-          <th class="src-text"> {% trans "שאלה" %} ▼ </th>
+          <th class="src-text">
+            {% trans "שאלה" %},
+            <i>{% trans "קוד" %}</i>
+          </th>
           <th class="src-text"> {% trans "כיוון חיובי" %} ▼ </th>
           <th colspan="{{num_parties}}" class="matrix">
             {% trans "ערכי מטריצת SVD עבור השאלות (כפול 100)" %} ▼
@@ -315,7 +317,10 @@
         </tr>
         {% for question in svd_questions %}
           <tr>
-            <td class="src-text"> {{question.title}} </td>
+            <td class="src-text">
+              {{question.title}}
+              <span style="float: left;"><i>{{question.code}}</i></span>
+            </td>
             <td class="src-text"> {{question.positive}} </td>
             {% for x in question.weights %}
               <td class="matrix" dir="ltr" style="text-align: right;"> {{x}} </td>

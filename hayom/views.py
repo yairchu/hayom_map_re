@@ -82,6 +82,7 @@ def home(request):
         if answer is None:
             answer = '-'
         context['svd_questions'].append({
+            'code': q,
             'title': question_titles[q],
             'positive': answer,
             'weights': ['%d'%(x*100) for x in col],
