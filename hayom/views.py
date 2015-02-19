@@ -2,6 +2,7 @@ from hayom import models, parse_source, simulate
 
 import copy
 import pickle
+import numpy
 from django.shortcuts import render
 
 def home(request):
@@ -12,6 +13,7 @@ def home(request):
 
     questions_order, question_titles, answer_sets = parse_source.questions(version)
     party_names, weights = parse_source.parties(questions_order, version)
+    svd_parties, svd_vals, svd_questions = numpy.linalg.svd(weights)
 
     orig_answer_sets = copy.deepcopy(answer_sets)
     for param in request.GET.keys():
@@ -56,11 +58,33 @@ def home(request):
         'num_runs': num_runs,
         'version': version,
         'versions': ['2015.2.15'],
+        'svd_vals': ['%.1f'%x for x in svd_vals],
+        'svd_parties': [],
+        'svd_questions': [],
+        'num_extra_questions': len(questions_order)-len(party_names),
         }
     for p, name in enumerate(party_names):
         context['parties'].append({
             'name': name,
             'percent': '%.1f' % (100*num_wins[p]/num_runs),
+            })
+    for party_name, row in zip(party_names, svd_parties):
+        context['svd_parties'].append({
+            'name': party_name,
+            'weights': ['%d'%(x*100) for x in row],
+            })
+    for q, col in zip(questions_order, svd_questions[:len(svd_vals)].transpose()):
+        if q == 'const' and (abs(col) <= 0.0001).all():
+            continue
+        answer = orig_answer_sets[q].get(1)
+        if answer is None:
+            answer = orig_answer_sets[q].get(2)
+        if answer is None:
+            answer = '-'
+        context['svd_questions'].append({
+            'title': question_titles[q],
+            'positive': answer,
+            'weights': ['%d'%(x*100) for x in col],
             })
     div = num_wins.copy()
     div[div == 0] = 1
@@ -72,7 +96,7 @@ def home(request):
             'title': question_titles[q],
             'num_rows': 1+len(orig_answer_sets[q]),
             'vector': [],
-            'answers': []
+            'answers': [],
             }
         for x, party in zip(weights[:, q_idx], party_names):
             question['vector'].append({
