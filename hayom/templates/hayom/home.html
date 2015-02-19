@@ -184,6 +184,8 @@
                 {% else %}
                   <td rowspan={{question.num_rows}} class="src-text">
                     {{ question.title }}
+                    <br />
+                    <i>{{ question.code }}</i>
                   </td>
                   <th style="text-align: left;" class="matrix">
                     {% trans "מקדם" %}:
@@ -206,7 +208,7 @@
                       <td class="answer src-text">
                         <input type="checkbox" name="{{question.code}}N{{answer.val}}" />
                         {{ answer.name }}
-                        <span dir="ltr">({{ answer.val }})</span>
+                        <span dir="ltr" style="float: left;"><i>{{ answer.val }}</i></span>
                       </td>
                       {% for pct in answer.party_percents %}
                         <td class="sim-results">
