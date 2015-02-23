@@ -5,7 +5,7 @@ import pickle
 import numpy
 from django.shortcuts import render
 
-default_version = 'latest'
+default_version = 'fixed'
 
 def home(request):
     params = []

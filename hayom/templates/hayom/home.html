@@ -120,7 +120,7 @@
             </a>
           </li>
           <li>
-            <a href="?m2_3N-2=on&m2_3N-1=on&m2_3N1=on&m2_3N2=on&m3_3N-2=on&m3_3N-1=on&m3_3N1=on&m3_3N2=on&m4_3N-2=on&m4_3N-1=on&m5_3N-2=on&m5_3N-1=on&m5_3N1=on&m5_3N2=on&m6_3N-2=on&m6_3N-1=on&m6_3N1=on&m6_3N2=on&m2_1N-2=on&m2_1N-1=on&m2_1N1=on&m2_1N2=on&m3_1N-2=on&m3_1N-1=on&m3_1N1=on&m3_1N2=on&m4_1N-2=on&m4_1N-1=on&m4_1N1=on&m4_1N2=on&m5_1N-2=on&m5_1N-1=on&m5_1N1=on&m5_1N2=on&m6_1N-2=on&m6_1N-1=on&m6_1N1=on&m6_1N2=on&m2_2N-2=on&m2_2N-1=on&m2_2N1=on&m2_2N2=on&m3_2N-2=on&m3_2N-1=on&m3_2N1=on&m3_2N2=on&m4_2N-2=on&m4_2N-1=on&m4_2N1=on&m4_2N2=on&m5_2N-2=on&m5_2N-1=on&m5_2N1=on&m5_2N2=on&m6_2N-2=on&m6_2N-1=on&m6_2N1=on&m6_2N2=on&V16N-1=on&V16N1=on">
+            <a href="?m2_3N-2=on&m2_3N-1=on&m2_3N1=on&m2_3N2=on&m3_3N-2=on&m3_3N-1=on&m3_3N1=on&m3_3N2=on&m4_3N-2=on&m4_3N-1=on&m4_3N1=on&m4_3N2=on&m5_3N-2=on&m5_3N-1=on&m5_3N1=on&m5_3N2=on&m6_3N-2=on&m6_3N-1=on&m6_3N1=on&m6_3N2=on&m2_1N-2=on&m2_1N-1=on&m2_1N1=on&m2_1N2=on&m3_1N-2=on&m3_1N-1=on&m3_1N1=on&m3_1N2=on&m4_1N-2=on&m4_1N-1=on&m4_1N1=on&m4_1N2=on&m5_1N-2=on&m5_1N-1=on&m5_1N1=on&m5_1N2=on&m6_1N-2=on&m6_1N-1=on&m6_1N1=on&m6_1N2=on&m2_2N-2=on&m2_2N-1=on&m2_2N1=on&m2_2N2=on&m3_2N-2=on&m3_2N-1=on&m3_2N1=on&m3_2N2=on&m4_2N-2=on&m4_2N-1=on&m4_2N1=on&m4_2N2=on&m5_2N-2=on&m5_2N-1=on&m5_2N1=on&m5_2N2=on&m6_2N-2=on&m6_2N-1=on&m6_2N1=on&m6_2N2=on&V16N-1=on&V16N1=on">
               {% trans "משתמש נייטרלי" %}
             </a> - {% trans "מקבל את הליכוד או את המחנה הציוני" %}.
           </li>
@@ -149,7 +149,7 @@
                 </a>
               </li>
               <li>
-                <a href="?m2_3N-2=on&m2_3N-1=on&m2_3N0=on&m3_3N-2=on&m3_3N-1=on&m3_3N0=on&m4_3N-2=on&m4_3N-1=on&m6_3N-2=on&m6_3N-1=on&m6_3N0=on&m2_2N0=on&m2_2N1=on&m2_2N2=on&m3_2N-2=on&m3_2N-1=on&m3_2N0=on&m4_2N-2=on&m4_2N-1=on&m4_2N0=on&m5_2N-2=on&m5_2N-1=on&m5_2N0=on">
+                <a href="?m2_3N-2=on&m2_3N-1=on&m2_3N0=on&m3_3N-2=on&m3_3N-1=on&m3_3N0=on&m4_3N-2=on&m4_3N-1=on&m4_3N0=on&m6_3N-2=on&m6_3N-1=on&m6_3N0=on&m2_2N0=on&m2_2N1=on&m2_2N2=on&m3_2N-2=on&m3_2N-1=on&m3_2N0=on&m4_2N-2=on&m4_2N-1=on&m4_2N0=on&m5_2N-2=on&m5_2N-1=on&m5_2N0=on">
                   {% trans "הצבעה לפי ההטיה" %}
                 </a>
               </li>
@@ -266,18 +266,38 @@
             <tr>
               <td colspan={{num_cols}} style="border-top: 2px solid black;" class="general">
                 {% trans "גרסת השאלון" %}:
-                <input type="radio" name="version" value="latest"
-                  {% if version == 'latest' %} checked="true" {% endif %}
-                />
-                {% trans "גרסה עדכנית נכון ל" %}
-                2015.2.17
-                {% for v in versions %}
-                  <input type="radio" name="version" value="{{v}}"
-                    {% if version == v %} checked="true" {% endif %}
-                  />
-                  {% trans "גרסה מ" %}
-                  {{v}}
-                {% endfor %}
+                <ul>
+                  <li>
+                    <input type="radio" name="version" value="fixed"
+                      {% if version == 'fixed' %} checked="true" {% endif %}
+                    />
+                    {% blocktrans %}
+                      גרסה מתוקנת - בגרסה המקורית מאתר ישראל היום יש תקלה (ראה שורה הבאה),
+                      שמקורה כנראה טעות מתכנת תמימה,
+                      ולכן גרסה זו (המתוקנת) כנראה מייצגת את כוונת יוצרי האתר.
+                    {% endblocktrans %}
+                  </li>
+                  <li>
+                    <input type="radio" name="version" value="latest"
+                      {% if version == 'latest' %} checked="true" {% endif %}
+                    />
+                    {% blocktrans %}
+                      גרסה עדכנית (נכון ל 2015.2.23) כמו באתר ישראל היום, כולל תקלות.
+                      יש תקלה בשאלה השלישית שבחירת ״נוטה להסכים״ או ״מסכים בהחלט״
+                      לא מעדכנים את התשובה לשאלה זו
+                      אלא משנים את התשובה לשאלה הראשונה ל ״נוטה להתנגד״ או ״מתנגד בהחלט״.
+                    {% endblocktrans %}
+                  </li>
+                  {% for v in versions %}
+                    <li>
+                      <input type="radio" name="version" value="{{v}}"
+                        {% if version == v %} checked="true" {% endif %}
+                      />
+                      {% trans "גרסה מ" %}
+                      {{v}}
+                    </li>
+                  {% endfor %}
+                </ul>
               </td>
             </tr>
             <tr>

@@ -4,12 +4,17 @@ from bs4 import BeautifulSoup
 
 dirname = os.path.dirname(__file__)
 
-def questions(version='latest'):
+def version_dir(version):
+    if version == 'fixed':
+        version = 'latest'
+    return '%s/data/%s' % (dirname, version)
+
+def questions(version):
     '''
     Parse the index.html file of "map and you"
     to extract the list of question titles and possible answers.
     '''
-    html_src = BeautifulSoup(open('%s/data/%s/index.html' % (dirname, version)))
+    html_src = BeautifulSoup(open('%s/index.html' % version_dir(version)))
 
     # 'const' is a special question that corresponds
     # to constants added to the parties scores.
@@ -37,14 +42,16 @@ def questions(version='latest'):
                     break
                 question_elem = question_elem.parent
             titles[question_id] = question_titles[0].text.strip()
+    answer_sets['m4_3'][1] = 'נוטה להסכים*'
+    answer_sets['m4_3'][2] = 'מסכים בהחלט*'
     return order, titles, answer_sets
 
-def parties(questions_order, version='latest'):
+def parties(questions_order, version):
     '''
     Parse the plugins.js of "map and you"
     to extract the list of parties and their question weight matrix.
     '''
-    js_src = iter(open('%s/data/%s/plugins.js' % (dirname, version)))
+    js_src = iter(open('%s/plugins.js' % version_dir(version)))
 
     questions = set(['const'])
     for line in js_src:
