@@ -174,7 +174,10 @@
             </tr>
             <tr>
               <th colspan=2 style="text-align: left;" class="sim-results">
-                {% trans "סיכוי להיות מומלץ על ידי השאלון בהינתן התשובות הנבחרות" %}:
+                {% blocktrans %}
+                סיכוי להיות מומלץ על ידי השאלון
+                במענה אקראי על השאלות מתוך התשובות הנבחרות:
+                {% endblocktrans %}
                 <br />
                 ({% trans "מתוך דגימה של" %} {{num_runs}} {% trans "ריצות אקראיות" %})
               </th>
@@ -312,9 +315,7 @@
       <table class="table table-bordered">
         <tr>
           <th colspan=1 style="text-align: center;" class="sim-results">
-            {% trans "סיכוי להיות מומלץ על ידי השאלון בהינתן התשובות הנבחרות" %}:
-            <br />
-            ({% trans "מתוך דגימה של" %} {{num_runs}} {% trans "ריצות אקראיות" %})
+            {% trans "סיכוי להיות מומלץ.." %}
           </th>
           <th style="text-align: left; border-left: 2px solid black;" class="src-text">
             {% trans "גוש מדיני בטחוני" %}:
