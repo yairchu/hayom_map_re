@@ -308,6 +308,62 @@
           </tfoot>
         </table>
       </form>
+      <h2> {% trans "סיכום לפי גושים" %} </h2>
+      <table class="table table-bordered">
+        <tr>
+          <th colspan=1 style="text-align: center;" class="sim-results">
+            {% trans "סיכוי להיות מומלץ על ידי השאלון בהינתן התשובות הנבחרות" %}:
+            <br />
+            ({% trans "מתוך דגימה של" %} {{num_runs}} {% trans "ריצות אקראיות" %})
+          </th>
+          <th style="text-align: left; border-left: 2px solid black;" class="src-text">
+            {% trans "גוש מדיני בטחוני" %}:
+          </th>
+          {% for cluster in clusters_horiz %}
+            <td class="src-text">
+              <b>{{cluster.name}}:</b>
+              {% for party in cluster.parties %}
+                {{party}}{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            </td>
+          {% endfor %}
+        </tr>
+        <tr style="border-bottom: 2px solid black;">
+          <th class="src-text">
+            {% trans "גוש דתי חילוני" %} ▼
+          </th>
+          <th style="border-left: 2px solid black;" class="src-text">
+            <div style="float: left;">
+              {% trans "כולם ד״ח" %}:
+            </div>
+            <div style="clear: both;"></div>
+            {% trans "כולם מ״ב" %} ▼
+          </th>
+          {% for cluster in clusters_horiz %}
+            <td class="sim-results">
+              {{cluster.percent}}%
+            </td>
+          {% endfor %}
+        </tr>
+        {% for cluster in clusters_vert %}
+          <tr>
+            <td class="src-text">
+              <b>{{cluster.name}}:</b>
+              {% for party in cluster.parties %}
+                {{party}}{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            </td>
+            <td style="border-left: 2px solid black;" class="sim-results">
+              {{cluster.percent}}%
+            </td>
+            {% for x in cluster.intersections %}
+              <td class="sim-results">
+                {{x}}
+              </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </table>
       <h2> {% trans "ניתוח גורמים ראשיים" %} </h2>
       <p>
         {% trans "כאן מוצגת אנליזה של המטריצה לפי שיטת" %}

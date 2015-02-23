@@ -64,12 +64,54 @@ def home(request):
         'svd_parties': [],
         'svd_questions': [],
         'num_extra_questions': len(questions_order)-len(party_names),
+        'clusters_horiz': [
+            {
+                'name': 'ימין',
+                'parties': ['הליכוד', 'ישראל ביתנו', 'הבית היהודי', 'כולנו', 'העם איתנו'],
+            },
+            {
+                'name': 'מרכז',
+                'parties': ['יש עתיד', 'ש״ס', 'יהדות התורה'],
+            },
+            {
+                'name': 'שמאל',
+                'parties': ['המחנה הציוני', 'מרצ', 'הרשימה המשותפת'],
+            },
+            ],
+        'clusters_vert': [
+            {
+                'name': 'חילוני',
+                'parties': ['הליכוד', 'ישראל ביתנו', 'יש עתיד', 'המחנה הציוני', 'כולנו', 'מרצ', 'הרשימה המשותפת'],
+            },
+            {
+                'name': 'דתי',
+                'parties': ['ש״ס', 'יהדות התורה', 'הבית היהודי', 'העם איתנו'],
+            },
+            ],
+        'cluster_stats': {},
         }
+    party_stats = {}
     for p, name in enumerate(party_names):
+        chance = num_wins[p]/num_runs
+        party_stats[name] = chance
         context['parties'].append({
             'name': name,
-            'percent': '%.1f' % (100*num_wins[p]/num_runs),
+            'percent': '%.1f' % (100*chance),
             })
+    for clusters in [context['clusters_horiz'], context['clusters_vert']]:
+        for cluster in clusters:
+            cluster['percent'] = '%.1f' % (
+                100 * sum(party_stats[p] for p in cluster['parties']))
+    for vert_cluster in context['clusters_vert']:
+        vert_set = set(vert_cluster['parties'])
+        vert_cluster['intersections'] = []
+        for horiz_cluster in context['clusters_horiz']:
+            common_set = vert_set.intersection(set(horiz_cluster['parties']))
+            if not common_set:
+                vert_cluster['intersections'].append('-')
+                continue
+            vert_cluster['intersections'].append('%.1f%%' %
+                (100 * sum(party_stats[p] for p in common_set)))
     for party_name, row in zip(party_names, svd_parties):
         context['svd_parties'].append({
             'name': party_name,
