@@ -5,10 +5,12 @@ import pickle
 import numpy
 from django.shortcuts import render
 
+default_version = 'latest'
+
 def home(request):
     params = []
-    version = request.GET.get('version', 'latest')
-    if version != 'latest':
+    version = request.GET.get('version', default_version)
+    if version != default_version:
         params.append('version=' + version)
 
     questions_order, question_titles, answer_sets = parse_source.questions(version)
