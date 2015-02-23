@@ -256,9 +256,12 @@
                       {% endfor %}
                     {% else %}
                       <td class="answer answer-invalid src-text">
-                        <input type="checkbox" name="{{question.code}}N{{answer.val}}" checked="on" />
-                        {{ answer.name }}
-                        <span dir="ltr">({{ answer.val }})</span>
+                        <input type="checkbox" id="{{question.code}}N{{answer.val}}" name="{{question.code}}N{{answer.val}}" checked="on" />
+                        <label for="{{question.code}}N{{answer.val}}">
+                          <span></span>
+                          {{ answer.name }}
+                        </label>
+                        <span dir="ltr" style="float: left;"><i>{{ answer.val }}</i></span>
                       </td>
                       {% for party in parties %}
                         <td class="answer-invalid sim-results">
