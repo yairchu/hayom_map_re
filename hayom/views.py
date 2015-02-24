@@ -54,7 +54,7 @@ def home(request):
 
     context = {
         'num_parties': len(party_names),
-        'num_cols': 2 + len(party_names),
+        'num_cols': 3 + len(party_names),
         'parties': [],
         'questions': [],
         'num_runs': num_runs,
