@@ -239,6 +239,10 @@
                   {{ party.name }}
                 </td>
               {% endfor %}
+              <th rowspan=3 style="border-right: 2px solid black;" class="matrix">
+                חשיבות השאלה:
+                (נורמת ווקטור המקדמים כפול נורמת ווקטור ערכי התשובות)
+              </th>
             </tr>
             <tr>
               <th colspan=2 style="text-align: left;" class="sim-results">
@@ -301,6 +305,9 @@
                     </span>
                   </td>
                 {% endfor %}
+                <td rowspan="{{question.num_rows}}" style="border-right: 2px solid black;" class="matrix">
+                  {{question.norm}}
+                </td>
               </tr>
               {% if question.code != 'const' %}
                 {% for answer in question.answers %}

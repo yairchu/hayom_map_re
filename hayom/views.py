@@ -136,19 +136,22 @@ def home(request):
     for q_idx, q in enumerate(questions_order):
         if q == 'const' and (weights[:, q_idx] == 0).all():
             continue
+        vector = weights[:, q_idx]
+        orig_answers = orig_answer_sets[q]
         question = {
             'code': q,
             'title': question_titles[q],
             'num_rows': 1+len(orig_answer_sets[q]),
             'vector': [],
             'answers': [],
+            'norm': '%.3f' % (sum(vector**2)*sum(x**2 for x in orig_answers))**0.5,
             }
-        for x, party in zip(weights[:, q_idx], party_names):
+        for x, party in zip(vector, party_names):
             question['vector'].append({
                 'val': '%.3f'%x,
                 'party': party
             })
-        for k, v in sorted(orig_answer_sets[q].items()):
+        for k, v in sorted(orig_answers.items()):
             valid_answers = answer_sets[q]
             answer = {
                 'val': k,
