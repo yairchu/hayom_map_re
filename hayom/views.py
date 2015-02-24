@@ -144,7 +144,7 @@ def home(request):
             'num_rows': 1+len(orig_answer_sets[q]),
             'vector': [],
             'answers': [],
-            'norm': '%.3f' % (sum(vector**2)*sum(x**2 for x in orig_answers))**0.5,
+            'norm': '%.1f' % (sum(vector**2)*sum(x**2 for x in orig_answers))**0.5,
             }
         for x, party in zip(vector, party_names):
             question['vector'].append({
